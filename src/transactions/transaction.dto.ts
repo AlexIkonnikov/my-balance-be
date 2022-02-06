@@ -5,4 +5,13 @@ export class TransactionDto {
   total: number;
   @ApiProperty()
   date: Date;
+
+  userId: number;
+}
+
+export class TransactionCreateRequest {
+  @ApiProperty()
+  total: number;
+  @ApiProperty()
+  date: Date;
 }

@@ -13,6 +13,6 @@ export class User {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', select: false })
+  @Column({ type: 'varchar' })
   password: string;
 }

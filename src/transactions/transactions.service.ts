@@ -16,6 +16,14 @@ export class TransactionsService {
     return await this.transactionRepository.save(transaction);
   }
 
+  async updateTransaction(id: string, dto: TransactionDto) {
+    return await this.transactionRepository.update(id, { ...dto });
+  }
+
+  deleteTransaction(id: string) {
+    this.transactionRepository.delete(id);
+  }
+
   async getTransactionById(id: string) {
     return await this.transactionRepository.findOne(id);
   }

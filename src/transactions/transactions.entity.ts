@@ -13,6 +13,9 @@ export class Transaction {
   @Column({ type: 'date' })
   date: Date;
 
+  @Column({ type: 'integer' })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.id)
   user: User;
 }
