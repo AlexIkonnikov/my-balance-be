@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { TransactionDto } from './transaction.dto';
 import { Transaction } from './transactions.entity';
 
@@ -26,5 +26,19 @@ export class TransactionsService {
 
   async getTransactionById(id: string) {
     return await this.transactionRepository.findOne(id);
+  }
+
+  async getTransactionByDate(date: Date, userId: string) {
+    return await this.transactionRepository.find({
+      where: { date, userId },
+      select: ['total', 'date'],
+    });
+  }
+
+  async getTransactionBetweenDate(start: Date, end: Date, id: string) {
+    return await this.transactionRepository.find({
+      where: { userId: id, date: Between(start, end) },
+      select: ['total', 'date'],
+    });
   }
 }

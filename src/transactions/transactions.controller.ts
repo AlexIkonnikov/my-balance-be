@@ -26,12 +26,25 @@ export class TransactionsController {
     return this.transactionService.createTransaction({ ...dto, userId: id });
   }
 
-  @Get(':id')
-  @ApiParam({ name: 'id' })
+  @Get(':date')
+  @ApiParam({ name: 'date', type: Date })
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  getById(@Param() { id }, @Request() req) {
-    return this.transactionService.getTransactionById(id);
+  getByDate(@Param() { date }, @Request() { user: id }) {
+    return this.transactionService.getTransactionByDate(date, id);
+  }
+
+  @Get(':date_start/:date_end')
+  @ApiParam({ name: 'date_start', type: Date })
+  @ApiParam({ name: 'date_end', type: Date })
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  getByDateRange(@Param() { date_start, date_end }, @Request() { user: id }) {
+    return this.transactionService.getTransactionBetweenDate(
+      date_start,
+      date_end,
+      id,
+    );
   }
 
   @Put(':id')
