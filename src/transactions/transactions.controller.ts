@@ -6,10 +6,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { TransactionCreateRequest, TransactionDto } from './transaction.dto';
 import { TransactionsService } from './transactions.service';
@@ -34,12 +35,12 @@ export class TransactionsController {
     return this.transactionService.getTransactionByDate(date, id);
   }
 
-  @Get(':date_start/:date_end')
-  @ApiParam({ name: 'date_start', type: Date })
-  @ApiParam({ name: 'date_end', type: Date })
+  @Get()
+  @ApiQuery({ name: 'date_start', type: Date })
+  @ApiQuery({ name: 'date_end', type: Date })
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  getByDateRange(@Param() { date_start, date_end }, @Request() { user: id }) {
+  getByDateRange(@Query() { date_start, date_end }, @Request() { user: id }) {
     return this.transactionService.getTransactionBetweenDate(
       date_start,
       date_end,
