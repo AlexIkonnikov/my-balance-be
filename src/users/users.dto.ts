@@ -10,4 +10,10 @@ export class LoginUserDto {
 export class CreateUserDto extends LoginUserDto {
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  surname: string;
+
+  @ApiProperty()
+  patronymic: string;
 }
