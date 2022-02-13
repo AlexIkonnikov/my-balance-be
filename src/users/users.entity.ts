@@ -14,5 +14,11 @@ export class User {
   name: string;
 
   @Column({ type: 'varchar' })
+  surname: string;
+
+  @Column({ type: 'varchar' })
+  patronymic: string;
+
+  @Column({ type: 'varchar' })
   password: string;
 }
