@@ -16,8 +16,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async login(dto: LoginUserDto) {
-    const user = await this.validateUser(dto);
-    return this.generateToken(user);
+    const { password, ...user } = await this.validateUser(dto);
+    const response = {
+      user,
+      token: this.generateToken({ ...user, password }),
+    };
+    return response;
   }
 
   async registration(dto: CreateUserDto) {
@@ -26,8 +30,15 @@ export class AuthService {
       throw new HttpException('User already exist', 400);
     }
     const hash = await bcrypt.hash(dto.password, 5);
-    const user = await this.userService.createUser({ ...dto, password: hash });
-    return this.generateToken(user);
+    const { password, ...user } = await this.userService.createUser({
+      ...dto,
+      password: hash,
+    });
+    const response = {
+      user,
+      token: this.generateToken({ ...user, password }),
+    };
+    return response;
   }
 
   generateToken({ id, name, email }: User) {
@@ -37,9 +48,12 @@ export class AuthService {
 
   private async validateUser({ email, password }: LoginUserDto) {
     const user = await this.userService.getUserByEmail(email);
-    const passwordEqual = await bcrypt.compare(password, user.password);
-    if (user && passwordEqual) {
-      return user;
+    if (user) {
+      const passwordEqual = await bcrypt.compare(password, user.password);
+      if (passwordEqual) {
+        return user;
+      }
+      throw new UnauthorizedException({ message: 'Wrong login or password' });
     }
     throw new UnauthorizedException({ message: 'Wrong login or password' });
   }
