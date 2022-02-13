@@ -31,7 +31,7 @@ export class TransactionsService {
   async getTransactionByDate(date: Date, userId: string) {
     return await this.transactionRepository.find({
       where: { date, userId },
-      select: ['total', 'date'],
+      select: ['total', 'date', 'category', 'comment'],
     });
   }
 
