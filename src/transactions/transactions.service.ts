@@ -31,14 +31,26 @@ export class TransactionsService {
   async getTransactionByDate(date: Date, userId: string) {
     return await this.transactionRepository.find({
       where: { date, userId },
-      select: ['total', 'date', 'category', 'comment'],
+      select: ['id', 'date', 'category', 'comment', 'total'],
     });
   }
 
   async getTransactionBetweenDate(start: Date, end: Date, id: string) {
-    return await this.transactionRepository.find({
+    const transactions = await this.transactionRepository.find({
       where: { userId: id, date: Between(start, end) },
-      select: ['total', 'date'],
+      select: ['id', 'date', 'category', 'comment', 'total'],
+      order: { date: 'ASC' },
     });
+
+    const incomeExpenses = transactions.reduce(
+      (acc, { total }) => {
+        return total > 0
+          ? { income: acc.income + total, expenses: acc.expenses }
+          : { income: acc.income, expenses: acc.expenses + total };
+      },
+      { income: 0, expenses: 0 },
+    );
+
+    return { transactions, ...incomeExpenses };
   }
 }
